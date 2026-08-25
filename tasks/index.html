@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>制作案件タスク管理</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <h1>制作案件タスク管理</h1>
+    <p class="lead">営業担当者が、制作案件のタスク・担当者・優先度・期限をまとめて管理するためのツールです。</p>
+  </div>
+</header>
+
+<main class="inner">
+
+  <!-- ① 件数サマリー（クリックで絞り込み） -->
+  <section class="summary" aria-label="件数の内訳">
+    <button type="button" class="stat" data-status="all" aria-pressed="true">
+      <span class="stat-num" id="statAll">0</span>
+      <span class="stat-label">すべて</span>
+    </button>
+    <button type="button" class="stat is-todo" data-status="todo" aria-pressed="false">
+      <span class="stat-num" id="statTodo">0</span>
+      <span class="stat-label">未着手</span>
+    </button>
+    <button type="button" class="stat is-doing" data-status="doing" aria-pressed="false">
+      <span class="stat-num" id="statDoing">0</span>
+      <span class="stat-label">対応中</span>
+    </button>
+    <button type="button" class="stat is-done" data-status="done" aria-pressed="false">
+      <span class="stat-num" id="statDone">0</span>
+      <span class="stat-label">完了</span>
+    </button>
+    <button type="button" class="stat is-over" data-status="over" aria-pressed="false">
+      <span class="stat-num" id="statOver">0</span>
+      <span class="stat-label">期限切れ</span>
+    </button>
+  </section>
+
+  <!-- ② 登録・編集フォーム -->
+  <section class="panel" id="formPanel">
+    <h2 id="formTitle">タスクを追加する</h2>
+    <p class="hint">「タスク名」だけでも登録できます。あとから編集できるので、まずは気軽に入れてください。</p>
+
+    <form id="taskForm" novalidate>
+      <div class="field field-wide">
+        <label for="title">タスク名 <span class="required">必須</span></label>
+        <input type="text" id="title" maxlength="100" placeholder="例：トップページのデザイン修正" autocomplete="off" required>
+        <p class="error" id="titleError" hidden>タスク名を入力してください。</p>
+      </div>
+
+      <div class="field field-wide">
+        <label for="client">案件名・クライアント名</label>
+        <input type="text" id="client" maxlength="100" placeholder="例：株式会社サンプル／春の新商品LP" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="assignee">担当者</label>
+        <input type="text" id="assignee" maxlength="40" list="assigneeList" placeholder="例：山田" autocomplete="off">
+        <datalist id="assigneeList"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="priority">優先度</label>
+        <select id="priority">
+          <option value="high">高（最優先）</option>
+          <option value="mid" selected>中（通常）</option>
+          <option value="low">低（余裕あり）</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="due">期限</label>
+        <input type="date" id="due">
+      </div>
+
+      <div class="field">
+        <label for="status">ステータス</label>
+        <select id="status">
+          <option value="todo" selected>未着手</option>
+          <option value="doing">対応中</option>
+          <option value="done">完了</option>
+        </select>
+      </div>
+
+      <div class="field field-wide">
+        <label for="memo">メモ</label>
+        <textarea id="memo" rows="2" maxlength="500" placeholder="例：先方確認は水曜まで。素材は共有済み。"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">この内容で追加する</button>
+        <button type="button" class="btn btn-ghost" id="cancelBtn" hidden>編集をやめる</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ③ 絞り込み・並び替え -->
+  <section class="panel toolbar" aria-label="絞り込みと並び替え">
+    <div class="field field-grow">
+      <label for="keyword">キーワード検索</label>
+      <input type="search" id="keyword" placeholder="タスク名・案件名・担当者・メモから探す" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="filterAssignee">担当者</label>
+      <select id="filterAssignee"><option value="all">すべて</option></select>
+    </div>
+    <div class="field">
+      <label for="filterPriority">優先度</label>
+      <select id="filterPriority">
+        <option value="all">すべて</option>
+        <option value="high">高</option>
+        <option value="mid">中</option>
+        <option value="low">低</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sort">並び替え</label>
+      <select id="sort">
+        <option value="due-asc" selected>期限が近い順</option>
+        <option value="due-desc">期限が遠い順</option>
+        <option value="priority">優先度が高い順</option>
+        <option value="created-desc">追加が新しい順</option>
+      </select>
+    </div>
+    <div class="toolbar-actions">
+      <button type="button" class="btn btn-ghost" id="resetFilterBtn">絞り込みを解除</button>
+      <button type="button" class="btn btn-ghost" id="csvBtn">CSVで書き出す</button>
+      <button type="button" class="btn btn-ghost" id="sampleBtn">サンプルを入れる</button>
+      <button type="button" class="btn btn-danger-ghost" id="clearBtn">すべて削除</button>
+    </div>
+  </section>
+
+  <!-- ④ タスク一覧 -->
+  <section aria-label="タスク一覧">
+    <div class="list-head">
+      <h2>タスク一覧</h2>
+      <p class="count" id="listCount">0件</p>
+    </div>
+    <div id="taskList" class="task-list"></div>
+    <p class="empty" id="emptyMsg" hidden></p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>データはお使いのブラウザ内（localStorage）にだけ保存されます。サーバーには送信されません。</p>
+    <p>別のパソコンやブラウザには引き継がれないため、バックアップには「CSVで書き出す」をご利用ください。</p>
+  </div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="script.js"></script>
+</body>
+</html>
