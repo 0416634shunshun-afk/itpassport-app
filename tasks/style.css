@@ -38,6 +38,8 @@
 
   --person-bg: #eef2ff; --person-text: #3730a3; --person-border: #dbe1ff;
 
+  --overdue-wash: #fff2f2;
+
   --field-bg: #ffffff;
   --toast-bg: #111827; --toast-text: #ffffff; --toast-icon: #7db0ff;
 
@@ -85,6 +87,7 @@
     --due-none-bg: #1a2130; --due-none-text: #6b7690;
 
     --person-bg: #1e2246; --person-text: #b7c0ff; --person-border: #313870;
+    --overdue-wash: #2b1518;
 
     --field-bg: #131a28;
     --toast-bg: #f4f6fa; --toast-text: #171e2c; --toast-icon: #143797;
@@ -129,6 +132,7 @@
   --due-none-bg: #1a2130; --due-none-text: #6b7690;
 
   --person-bg: #1e2246; --person-text: #b7c0ff; --person-border: #313870;
+  --overdue-wash: #2b1518;
 
   --field-bg: #131a28;
   --toast-bg: #f4f6fa; --toast-text: #171e2c; --toast-icon: #143797;
@@ -200,6 +204,31 @@ h1, h2, h3 { text-wrap: balance; }
 .site-footer .icon { margin-right: 6px; color: var(--accent); }
 
 main { padding-top: 24px; }
+
+/* ---------- 期限切れアラート ---------- */
+.overdue-banner {
+  position: sticky;
+  top: 12px;
+  z-index: 40;
+  align-items: center;
+  gap: 10px;
+  background: var(--due-over-bg);
+  color: var(--due-over-text);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-hover);
+}
+.overdue-banner:not([hidden]) { display: flex; }
+.overdue-banner .icon { flex-shrink: 0; width: 22px; height: 22px; }
+.overdue-banner span { flex: 1 1 auto; font-weight: 700; font-size: .92rem; }
+.overdue-banner-btn {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, .18);
+  border-color: rgba(255, 255, 255, .45);
+  color: #fff;
+}
+.overdue-banner-btn:hover { background: rgba(255, 255, 255, .3); }
 
 h2 { font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
 h2 .icon { color: var(--accent); }
@@ -358,6 +387,12 @@ input.is-invalid { border-color: var(--danger); }
 .task.p-low  { border-left-color: var(--low); }
 .task.is-done { opacity: .62; }
 .task.is-done .task-title { text-decoration: line-through; }
+.task.is-overdue {
+  background: var(--overdue-wash);
+  border-left-color: var(--over);
+  box-shadow: 0 0 0 1px var(--over), var(--shadow);
+}
+.task.is-overdue:hover { box-shadow: 0 0 0 1px var(--over), var(--shadow-hover); }
 
 .task-main { min-width: 0; }
 .task-title { margin: 0 0 2px; font-size: 1.05rem; font-weight: 700; word-break: break-word; }

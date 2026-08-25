@@ -44,6 +44,13 @@
 
 <main class="inner">
 
+  <!-- ⚠ 期限切れアラート -->
+  <div id="overdueBanner" class="overdue-banner" role="alert" hidden>
+    <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+    <span id="overdueBannerText"></span>
+    <button type="button" class="btn btn-sm overdue-banner-btn" id="overdueBannerBtn">今すぐ確認する</button>
+  </div>
+
   <!-- ① 件数サマリー（クリックで絞り込み） -->
   <section class="summary" aria-label="件数の内訳">
     <button type="button" class="stat" data-status="all" aria-pressed="true">

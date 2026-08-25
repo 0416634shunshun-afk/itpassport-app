@@ -6,6 +6,7 @@
 'use strict';
 
 var STORAGE_KEY = 'seisaku-task-app-v1';
+var BASE_TITLE = document.title;
 
 var PRIORITY_LABEL = { high: '優先度：高', mid: '優先度：中', low: '優先度：低' };
 var PRIORITY_ORDER = { high: 0, mid: 1, low: 2 };
@@ -243,6 +244,12 @@ Array.prototype.forEach.call(document.querySelectorAll('.stat'), function (btn) 
   });
 });
 
+$('overdueBannerBtn').addEventListener('click', function () {
+  filter.status = 'over';
+  render();
+  listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 $('resetFilterBtn').addEventListener('click', function () {
   filter.keyword = '';
   filter.status = 'all';
@@ -275,26 +282,33 @@ function visibleTasks() {
     return true;
   });
 
-  var far = '9999-12-31';
   list.sort(function (a, b) {
-    switch (filter.sort) {
-      case 'due-desc':
-        return (b.due || '0000-01-01').localeCompare(a.due || '0000-01-01');
-      case 'priority':
-        if (PRIORITY_ORDER[a.priority] !== PRIORITY_ORDER[b.priority]) {
-          return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
-        }
-        return (a.due || far).localeCompare(b.due || far);
-      case 'created-desc':
-        return b.createdAt - a.createdAt;
-      default: // due-asc
-        if ((a.due || far) !== (b.due || far)) {
-          return (a.due || far).localeCompare(b.due || far);
-        }
-        return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
-    }
+    // 期限切れタスクは、選んでいる並び替えに関わらず常に最上部にまとめる
+    var overdueRank = (isOverdue(a) ? 0 : 1) - (isOverdue(b) ? 0 : 1);
+    if (overdueRank !== 0) { return overdueRank; }
+    return compareBySort(a, b);
   });
   return list;
+}
+
+function compareBySort(a, b) {
+  var far = '9999-12-31';
+  switch (filter.sort) {
+    case 'due-desc':
+      return (b.due || '0000-01-01').localeCompare(a.due || '0000-01-01');
+    case 'priority':
+      if (PRIORITY_ORDER[a.priority] !== PRIORITY_ORDER[b.priority]) {
+        return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+      }
+      return (a.due || far).localeCompare(b.due || far);
+    case 'created-desc':
+      return b.createdAt - a.createdAt;
+    default: // due-asc
+      if ((a.due || far) !== (b.due || far)) {
+        return (a.due || far).localeCompare(b.due || far);
+      }
+      return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+  }
 }
 
 /* =========================================================
@@ -323,7 +337,9 @@ function render() {
 
 function taskCard(t) {
   var card = document.createElement('article');
-  card.className = 'task p-' + t.priority + (t.status === 'done' ? ' is-done' : '');
+  card.className = 'task p-' + t.priority +
+    (t.status === 'done' ? ' is-done' : '') +
+    (isOverdue(t) ? ' is-overdue' : '');
 
   var badge = dueBadge(t);
   var main = document.createElement('div');
@@ -405,6 +421,20 @@ function renderSummary() {
   Array.prototype.forEach.call(document.querySelectorAll('.stat'), function (btn) {
     btn.setAttribute('aria-pressed', btn.dataset.status === filter.status ? 'true' : 'false');
   });
+
+  updateOverdueBanner(counts.over);
+}
+
+function updateOverdueBanner(count) {
+  var banner = $('overdueBanner');
+  if (count > 0) {
+    $('overdueBannerText').textContent = '期限切れのタスクが' + count + '件あります。至急ご確認ください。';
+    banner.hidden = false;
+    document.title = '⚠(' + count + ') ' + BASE_TITLE;
+  } else {
+    banner.hidden = true;
+    document.title = BASE_TITLE;
+  }
 }
 
 function renderAssigneeOptions() {
