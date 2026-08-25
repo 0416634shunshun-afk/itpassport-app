@@ -4,14 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>制作案件タスク管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/><path d="M3 13h18"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8 12.5l2.6 2.6L16 9.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9.5v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5Z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-file-export" viewBox="0 0 24 24"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9.5 16.5l3-3M12.5 13.5v4.5h-4.5"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 12h5l1.5 3h5L16 12h5"/><path d="M5 12 3.5 6.5A2 2 0 0 1 5.4 4h13.2a2 2 0 0 1 1.9 2.5L19 12"/><path d="M3 12v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/></symbol>
+</svg>
+
 <header class="site-header">
   <div class="inner">
-    <h1>制作案件タスク管理</h1>
-    <p class="lead">営業担当者が、制作案件のタスク・担当者・優先度・期限をまとめて管理するためのツールです。</p>
+    <div class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg></div>
+    <div>
+      <h1>制作案件タスク管理</h1>
+      <p class="lead">営業担当者が、制作案件のタスク・担当者・優先度・期限をまとめて管理するためのツールです。</p>
+    </div>
   </div>
 </header>
 
@@ -20,30 +47,30 @@
   <!-- ① 件数サマリー（クリックで絞り込み） -->
   <section class="summary" aria-label="件数の内訳">
     <button type="button" class="stat" data-status="all" aria-pressed="true">
-      <span class="stat-num" id="statAll">0</span>
-      <span class="stat-label">すべて</span>
+      <span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></span>
+      <span class="stat-text"><span class="stat-num" id="statAll">0</span><span class="stat-label">すべて</span></span>
     </button>
     <button type="button" class="stat is-todo" data-status="todo" aria-pressed="false">
-      <span class="stat-num" id="statTodo">0</span>
-      <span class="stat-label">未着手</span>
+      <span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-circle"/></svg></span>
+      <span class="stat-text"><span class="stat-num" id="statTodo">0</span><span class="stat-label">未着手</span></span>
     </button>
     <button type="button" class="stat is-doing" data-status="doing" aria-pressed="false">
-      <span class="stat-num" id="statDoing">0</span>
-      <span class="stat-label">対応中</span>
+      <span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
+      <span class="stat-text"><span class="stat-num" id="statDoing">0</span><span class="stat-label">対応中</span></span>
     </button>
     <button type="button" class="stat is-done" data-status="done" aria-pressed="false">
-      <span class="stat-num" id="statDone">0</span>
-      <span class="stat-label">完了</span>
+      <span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg></span>
+      <span class="stat-text"><span class="stat-num" id="statDone">0</span><span class="stat-label">完了</span></span>
     </button>
     <button type="button" class="stat is-over" data-status="over" aria-pressed="false">
-      <span class="stat-num" id="statOver">0</span>
-      <span class="stat-label">期限切れ</span>
+      <span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg></span>
+      <span class="stat-text"><span class="stat-num" id="statOver">0</span><span class="stat-label">期限切れ</span></span>
     </button>
   </section>
 
   <!-- ② 登録・編集フォーム -->
   <section class="panel" id="formPanel">
-    <h2 id="formTitle">タスクを追加する</h2>
+    <h2><svg class="icon" aria-hidden="true"><use href="#i-plus" id="formIconUse"/></svg><span id="formTitle">タスクを追加する</span></h2>
     <p class="hint">「タスク名」だけでも登録できます。あとから編集できるので、まずは気軽に入れてください。</p>
 
     <form id="taskForm" novalidate>
@@ -93,8 +120,8 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary" id="submitBtn">この内容で追加する</button>
-        <button type="button" class="btn btn-ghost" id="cancelBtn" hidden>編集をやめる</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span id="submitBtnText">この内容で追加する</span></button>
+        <button type="button" class="btn btn-ghost" id="cancelBtn" hidden><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>編集をやめる</button>
       </div>
     </form>
   </section>
@@ -103,7 +130,10 @@
   <section class="panel toolbar" aria-label="絞り込みと並び替え">
     <div class="field field-grow">
       <label for="keyword">キーワード検索</label>
-      <input type="search" id="keyword" placeholder="タスク名・案件名・担当者・メモから探す" autocomplete="off">
+      <div class="search-wrap">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="search" id="keyword" placeholder="タスク名・案件名・担当者・メモから探す" autocomplete="off">
+      </div>
     </div>
     <div class="field">
       <label for="filterAssignee">担当者</label>
@@ -128,17 +158,17 @@
       </select>
     </div>
     <div class="toolbar-actions">
-      <button type="button" class="btn btn-ghost" id="resetFilterBtn">絞り込みを解除</button>
-      <button type="button" class="btn btn-ghost" id="csvBtn">CSVで書き出す</button>
-      <button type="button" class="btn btn-ghost" id="sampleBtn">サンプルを入れる</button>
-      <button type="button" class="btn btn-danger-ghost" id="clearBtn">すべて削除</button>
+      <button type="button" class="btn btn-ghost" id="resetFilterBtn"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>絞り込みを解除</button>
+      <button type="button" class="btn btn-ghost" id="csvBtn"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>CSVで書き出す</button>
+      <button type="button" class="btn btn-ghost" id="sampleBtn"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg>サンプルを入れる</button>
+      <button type="button" class="btn btn-danger-ghost" id="clearBtn"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>すべて削除</button>
     </div>
   </section>
 
   <!-- ④ タスク一覧 -->
   <section aria-label="タスク一覧">
     <div class="list-head">
-      <h2>タスク一覧</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>タスク一覧</h2>
       <p class="count" id="listCount">0件</p>
     </div>
     <div id="taskList" class="task-list"></div>
@@ -149,12 +179,16 @@
 
 <footer class="site-footer">
   <div class="inner">
-    <p>データはお使いのブラウザ内（localStorage）にだけ保存されます。サーバーには送信されません。</p>
-    <p>別のパソコンやブラウザには引き継がれないため、バックアップには「CSVで書き出す」をご利用ください。</p>
+    <p><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>データはお使いのブラウザ内（localStorage）にだけ保存されます。サーバーには送信されません。</p>
+    <p><svg class="icon" aria-hidden="true"><use href="#i-file-export"/></svg>別のパソコンやブラウザには引き継がれないため、バックアップには「CSVで書き出す」をご利用ください。</p>
   </div>
 </footer>
 
-<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden>
+  <svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>
+  <span id="toastText"></span>
+</div>
+
 
 <script src="script.js"></script>
 </body>

@@ -34,6 +34,8 @@ var dueInput = $('due');
 var statusInput = $('status');
 var memoInput = $('memo');
 var submitBtn = $('submitBtn');
+var submitBtnText = $('submitBtnText');
+var formIconUse = $('formIconUse');
 var cancelBtn = $('cancelBtn');
 var formTitle = $('formTitle');
 var titleError = $('titleError');
@@ -41,6 +43,7 @@ var listEl = $('taskList');
 var emptyMsg = $('emptyMsg');
 var listCount = $('listCount');
 var toastEl = $('toast');
+var toastText = $('toastText');
 
 /* =========================================================
    保存 / 読み込み
@@ -196,7 +199,8 @@ function startEdit(id) {
   memoInput.value = t.memo;
 
   formTitle.textContent = 'タスクを編集する';
-  submitBtn.textContent = '変更を保存する';
+  submitBtnText.textContent = '変更を保存する';
+  formIconUse.setAttribute('href', '#i-edit');
   cancelBtn.hidden = false;
   $('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   titleInput.focus();
@@ -208,7 +212,8 @@ function endEdit() {
   priorityInput.value = 'mid';
   statusInput.value = 'todo';
   formTitle.textContent = 'タスクを追加する';
-  submitBtn.textContent = 'この内容で追加する';
+  submitBtnText.textContent = 'この内容で追加する';
+  formIconUse.setAttribute('href', '#i-plus');
   cancelBtn.hidden = true;
   titleError.hidden = true;
   titleInput.classList.remove('is-invalid');
@@ -305,9 +310,10 @@ function render() {
 
   if (list.length === 0) {
     emptyMsg.hidden = false;
-    emptyMsg.textContent = tasks.length === 0
+    var msg = tasks.length === 0
       ? 'まだタスクがありません。上のフォームから最初のタスクを追加してください。'
       : '条件に合うタスクがありません。「絞り込みを解除」で全件表示に戻せます。';
+    emptyMsg.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#i-inbox"></use></svg><span>' + esc(msg) + '</span>';
     return;
   }
   emptyMsg.hidden = true;
@@ -358,13 +364,13 @@ function taskCard(t) {
   var editBtn = document.createElement('button');
   editBtn.type = 'button';
   editBtn.className = 'btn btn-ghost btn-sm';
-  editBtn.textContent = '編集';
+  editBtn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg>編集';
   editBtn.addEventListener('click', function () { startEdit(t.id); });
 
   var delBtn = document.createElement('button');
   delBtn.type = 'button';
   delBtn.className = 'btn btn-danger-ghost btn-sm';
-  delBtn.textContent = '削除';
+  delBtn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>削除';
   delBtn.addEventListener('click', function () {
     if (!window.confirm('「' + t.title + '」を削除します。よろしいですか？')) { return; }
     tasks = tasks.filter(function (x) { return x.id !== t.id; });
@@ -525,7 +531,7 @@ function esc(str) {
 
 var toastTimer = null;
 function showToast(message) {
-  toastEl.textContent = message;
+  toastText.textContent = message;
   toastEl.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2200);
